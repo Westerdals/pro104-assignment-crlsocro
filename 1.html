@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+    <style>
+        main{
+            border: 2px solid black;
+            width: 250px;
+            height: 230px;
+            position: absolute;
+            left: 150px;
+            top: 50px;
+            margin: auto;
+            background-color: aqua;
+        };
+    </style>
+</head>
+<body>
+    <main>
+        <!--Headline  -->
+        <h1>Simple Headline</h1>
+            <h5>Legg til et teammedlem:</h5>
+
+            <!-- Setter opp <form> for å legge til teammedlem -->
+                            <!-- Bruker onsubmit-funksjonen for å definere en funksjon i script som kjøres når submit-knappen trykkes på -->
+            <form onsubmit = "addMembers(event)">
+                <label for="Fornavn">Fornavn:</label>
+                <input type= "text" name="surName">
+                <br>
+                <br>
+                <label for="Etternavn">Etternavn:</label>
+                <input type= "text" name="lastName">
+                <br>
+                <br>
+                <input type="submit">
+            </form>
+    </main>
+    <script> 
+        //funksjon som er definert i form onsubmit
+        function addMembers(event){
+            //setter en event
+            event.preventDefault();
+
+            //henter DOM-elements
+            const surName = document.querySelector("[name = 'surName']").value;
+            const lastName = document.querySelector("[name = 'lastName']").value;
+            //Definerer variablene surName og lastName
+            const teamMember = {surName, lastName};
+
+            console.log(teamMember);
+            //Setter opp localStorage
+             
+            window.localStorage.setItem("Teammembers", JSON.stringify(teamMember));
+
+            event.target.reset();
+        };
+    </script>
+
+</body>
+</html>
