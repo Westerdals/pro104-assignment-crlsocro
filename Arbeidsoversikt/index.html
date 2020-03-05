@@ -1,0 +1,120 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Arbeidsoversikt</title>
+	
+	<style>
+		h1{
+			display: inline;
+			margin-left: 40px;
+		}
+		.entry-field{
+			width: 300px;
+			height: 320px; 
+			position: absolute; 
+			border: 2px solid black;
+			padding: 20px;
+			margin: 10px;	
+			background-color: antiquewhite;
+		}
+		#enter-task-box{
+            left: 10px;
+		}
+		#enter-member-box{
+			left: 360px;
+			margin-left: 10px;
+			margin-right: 10px;
+		}
+		input{
+			position: absolute;
+			display: inline-block;
+			width: 150px;
+			right: 40px;
+		}
+	</style>
+</head>
+<body>
+    <!-- Form for lagring av arbeidsoppgaver -->
+    <!--  OBS: "Task is finished"-input gir samme value uansett om boksen er checked eller ikke. Må fiskes! -->
+    <div id="enter-task-box" class="entry-field"> 
+	    <h1>Arbeidsoppgave</h1>
+		<h4>Legg til en arbeidsoppgave</h4>
+		<form onsubmit = "addTask(event)">
+			<label type="Arbeidsoppgave">Arbeidsoppgave:</label>
+			<input type="text" name="work-task">
+			<br><br>
+			<label type="Published">Start dato:</label>
+			<input type="date" name="start-date">
+			<br><br>
+			<label type="Deadline">Slutt dato:</label>
+			<input type="date" name="deadline">
+			<br><br>
+			<label for="done"> Task is finished</label>
+			<input type="checkbox" name="finished" value="task-finished">
+			<br><br>
+			<input type="submit">
+		</form>
+    </div>
+    
+    <!-- Form for lagring av teammedlemmer -->
+    <div id="enter-member-box" class="entry-field"> 
+        <h1>Teammedlemmer</h1>
+        <h4>Legg til et teammedlem</h4>  
+        <form onsubmit = "addMembers(event)">
+			<label for="Fornavn">Fornavn:</label>
+			<input type="text" name="surname">
+			<br><br>
+			<label for="Etternavn">Etternavn:</label>
+			<input type= "text" name="last-name">
+			<br><br>
+			<input type="submit">
+        </form>
+    </div>
+
+<script>
+    //Funksjon for lagring av arbeidsoppgave-objekt
+	function addTask(event){
+		
+		event.preventDefault();
+
+        //Uthenting av alle verdier i formen (og legger dem inn i variabler)
+		const workTask = document.querySelector("[name='work-task']").value;
+		const startDate = document.querySelector("[name='start-date']").value;
+		const deadline = document.querySelector("[name='deadline']").value;
+		const finished = document.querySelector("[value='task-finished']").value;
+
+        //Deklarering av objekt
+		const task = {workTask, startDate, deadline, finished};
+
+		console.log(task)
+
+        //Lagring av objektet i local storage
+		window.localStorage.setItem("task", JSON.stringify(task));
+
+	    event.target.reset();
+	}
+
+    //Funksjon for lagring av teammedlem-objekt
+    function addMembers(event){
+        
+        event.preventDefault();
+
+        //Uthenting av alle verdier i formen (og legger dem inn i variabler)
+        const surname = document.querySelector("[name = 'surname']").value;
+        const lastName = document.querySelector("[name = 'last-name']").value;
+            
+        //Deklarering av objekt
+        const teamMember = {surname, lastName};
+
+        console.log(teamMember);
+
+        //Lagring av objektet i local storage
+        window.localStorage.setItem("Teammembers", JSON.stringify(teamMember));
+
+        event.target.reset();
+    }
+
+</script>	
+</body>
+</html>
