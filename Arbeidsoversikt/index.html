@@ -31,8 +31,14 @@
 			display: inline-block;
 			width: 150px;
 			right: 40px;
-		}
+		}	
+		.renderbox1{
+            position: absolute;
+			left: 800px;
+        }
+        
 	</style>
+
 </head>
 <body>
     <!-- Form for lagring av arbeidsoppgaver -->
@@ -71,8 +77,23 @@
 			<input type="submit">
         </form>
     </div>
+    
+    <!-- rendring -->
+    
+    <div id="renderlist1" class="renderbox1"> 
+    <h2>Members:</h2>
+    <div id="teamMemberList"></div>
+    </div>     
+    
+    <div id="renderlist2" class="renderbox2">         
+    <h2>Oppgaver:</h2>
+    <div id="taskList"></div>
+    </div> 
+    
 
 <script>
+    
+    
     //Funksjon for lagring av arbeidsoppgave-objekt
 	function addTask(event){
 		
@@ -94,8 +115,10 @@
 
 	    event.target.reset();
 	}
-
+    
+    
     //Funksjon for lagring av teammedlem-objekt
+
     function addMembers(event){
         
         event.preventDefault();
@@ -110,10 +133,43 @@
         console.log(teamMember);
 
         //Lagring av objektet i local storage
-        window.localStorage.setItem("Teammembers", JSON.stringify(teamMember));
-
+        window.localStorage.setItem("teamMember", JSON.stringify(teamMember));
         event.target.reset();
     }
+    
+
+    
+        // render av teammembers
+    
+        function renderTeamMemberList() {
+        const teamMemberList = JSON.parse(window.localStorage.getItem("teamMember")) || [];
+        
+        const teamMemberListEl = document.getElementById("teamMember");
+        
+        for (const teamMember of teamMemberList) {
+            const teamMemberEl = document.createElement("div");
+            teamMemberEl.innerText = teamMember.surname + teamMember.lastName;
+            teamMemberListEl.appendChild(teamMemberEl);
+
+        }     
+     }
+        
+    
+       //render av arbeidsoppgaver
+        function renderTaskList() {
+        const taskList = JSON.parse(window.localStorage.getItem("task")) || [];
+        
+        const taskListEl = document.getElementById("task");
+        
+        for (const task of taskList) {
+            const taskListEl = document.createElement("div");
+            taskEl.innerText = task.workTask + task.startDate + task.deadline + task.finished;
+            taskListEl.appendChild(taskEl);
+
+        }     
+     }
+    
+  
 
 </script>	
 </body>
