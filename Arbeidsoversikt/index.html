@@ -26,17 +26,32 @@
             margin-left: 10px;
             margin-right: 10px;
         }
-        input{
+        #enter-assignment-box{
+            left: 710px;
+        }
+        input, select{
             position: absolute;
             display: inline-block;
             width: 150px;
             right: 40px;
         }  
-        .renderbox1{
+        .renderbox{
             position: absolute;
-            left: 800px;
+            margin: 10px;
+            border: 3px solid pink;
+            width: 300px;
+            top: 400px;
+            display: inline-block;
         }
-       
+        #task-renderbox{
+            left: 20px;
+        }
+        #member-renderbox{
+            left: 360px;
+        }
+        #assignment-renderbox{
+            left: 710px;
+        }      
     </style>
  
 </head>
@@ -77,28 +92,99 @@
             <input type="submit">
         </form>
     </div>
+
+    <div id="enter-assignment-box" class="entry-field">
+        <h1>Tildelinger</h1>
+        <h4>Tildel et teammedlem til en arbeidsoppgave</h4>  
+        <form onsubmit="assignMemberToTask(event)">
+            
+            <label>Arbeidsoppgave:</label>
+            <select id="select-task">
+            </select>
+
+            <br><br>
+
+            <label>Teammedlem:</label>
+            <select id="select-team-member">
+            </select>
+
+            <br><br>
+
+            <input type="submit">
+        </form>
+    </div>
    
+    <br>
+
     <!-- rendring -->
-   
-    <div id="renderlist1" class="renderbox1">
-    <h2>Members:</h2>
-    <div id="teamMemberList"></div>
+    <div id="member-renderbox" class="renderbox">    
+      <div id="teamMemberList"></div>
     </div>    
    
-    <div id="renderlist2" class="renderbox2">        
-    <h2>Oppgaver:</h2>
-    <div id="taskList"></div>
+    <div id="task-renderbox" class="renderbox">
+      <div id="task-list"></div>
+    </div>
+
+    <div id="assignment-renderbox" class="renderbox">
+      <div id="assignment-list"></div>
     </div>
  
-    <div id="task" style="position: absolute;right: 0"></div>
-   
  
 <script>
-   
-    renderTaskList()
-    renderTeamMemberList()
+
+    listObjectsToAssignments();
+    renderTaskList();
+    renderTeamMemberList();
+
+
+    //Funksjon for å liste ut alle lagrede objekter i "Tildelinger"-menyen
+    function listObjectsToAssignments() {
+      const taskSelect = document.getElementById("select-task");
+      const teamMemberSelect = document.getElementById("select-team-member");
+
+      const taskList = JSON.parse(localStorage.getItem("taskChecking")) || [];
+      const teamMemberList = JSON.parse(localStorage.getItem("teamMember")) || [];
+      
+      taskSelect.innerHTML = "";
+      teamMemberSelect.innerHTML = "";
+
+
+      for (const task of taskList){
+            taskSelect.innerHTML += "<option value=" +  task.workTask + `>${task.workTask}</option>`;
+      }
+
+      for (const teamMember of teamMemberList) {
+            teamMemberSelect.innerHTML += "<option value=" + `${teamMember.surname} ${teamMember.lastName}">${teamMember.surname} ${teamMember.lastName}</option>`; 
+      }  
+    }
+
+    //Funksjon for å tildele Teammedlem-objekt til Arbeidsoppgave (lage objekt)
+    var assignmentChecking = JSON.parse(localStorage.getItem('assignment')) || [];
+    function assignMemberToTask() {
+        event.preventDefault();
+
+        const assignedTaskValue = document.getElementById("select-task");
+        const assignedTeamMemberValue = document.getElementById("select-team-member");
+
+        const taskToBeAssigned = assignedTaskValue.options[assignedTaskValue.selectedIndex].text;
+        const memberToBeAssigned = assignedTeamMemberValue.options[assignedTeamMemberValue.selectedIndex].text;
+        
+        const assignmentObject = {taskToBeAssigned, memberToBeAssigned};
+        assignmentChecking.push(assignmentObject);
+        localStorage.setItem("assignment", JSON.stringify(assignmentChecking));
+        
+        const assignmentListEl = document.getElementById("assignment-list");
+        assignmentListEl.innerHTML = '';
+        //renderAssignmentList();
+    }
+
+    //Funksjon for å liste ut alle assignments
+    function renderassignments() {
+      //...
+    }
+
+
     //Funksjon for lagring av arbeidsoppgave-objekt
-    var taskChecking = JSON.parse(localStorage.getItem('taskChecking')) || [];
     function addTask(event){
        
         event.preventDefault();
@@ -111,12 +197,12 @@
  
         //Deklarering av objekt
        
-        var taskObject = {workTask, startDate, deadline, finished}
-        taskChecking.push(taskObject)
-        localStorage.setItem("taskChecking", JSON.stringify(taskChecking))
+        var taskObject = {workTask, startDate, deadline, finished};
+        taskChecking.push(taskObject);
+        localStorage.setItem("taskChecking", JSON.stringify(taskChecking));
         const taskListEl = document.getElementById("task");
-        taskListEl.textContent = ''
-        renderTaskList()
+        taskListEl.innerHTML = '';
+        renderTaskList();
     }
    
    
@@ -149,25 +235,25 @@
         // render av teammembers
    
         function renderTeamMemberList() {
-        const teamMemberList = JSON.parse(localStorage.getItem("teamMember")) || [];
+          const teamMemberList = JSON.parse(localStorage.getItem("teamMember")) || [];
        
-        const teamMemberListEl = document.getElementById("teamMemberList");
+          const teamMemberListEl = document.getElementById("teamMemberList");
        
-        for (const teamMember of teamMemberList) {
+          for (const teamMember of teamMemberList) {
             const teamMemberEl = document.createElement("div");
             teamMemberEl.innerText = teamMember.surname + teamMember.lastName;
             teamMemberListEl.appendChild(teamMemberEl);
  
-        }    
-     }
-       
+          }
+          listObjectsToAssignments();    
+        }       
    
        //render av arbeidsoppgaver
         function renderTaskList() {
-        const taskList = JSON.parse(localStorage.getItem("taskChecking")) || [];
+          const taskList = JSON.parse(localStorage.getItem("taskChecking")) || [];
    
        
-        const taskListEl = document.getElementById("task");
+          const taskListEl = document.getElementById("task-list");
        
         // taskList.map( task => {
         //  const taskEl = document.createElement("div");
@@ -178,11 +264,14 @@
  
         for (const task of taskList) {
             const taskEl = document.createElement("div");
-            taskEl.innerText = task.workTask + task.startDate + task.deadline + task.finished;
+            taskEl.innerText = `${task.workTask} ${task.startDate} ${task.deadline} ${task.finished}`;
             taskListEl.appendChild(taskEl);
  
-        }    
+        } 
+        listObjectsToAssignments();   
      }
+
+
    
  
  
