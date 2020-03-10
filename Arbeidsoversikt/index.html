@@ -5,19 +5,28 @@
     <title>Arbeidsoversikt</title>
    
     <style>
+
         h1{
             display: inline;
             margin-left: 40px;
         }
         .entry-field{
+           
             width: 300px;
             height: 320px;
-            position: absolute;
             border: 2px solid black;
             padding: 20px;
             margin: 10px;  
             background-color: antiquewhite;
         }
+
+        #grid-box{
+            display: grid;
+            grid-template-columns: 350px 350px 350px;
+            align-content: center;
+            
+        }
+
         #enter-task-box{
             left: 10px;
         }
@@ -30,27 +39,34 @@
             left: 710px;
         }
         input, select{
-            position: absolute;
             display: inline-block;
             width: 150px;
             right: 40px;
         }  
+
+        #renderContainer{
+            position: relative;
+            width: 1000px;
+        }
         .renderbox{
             position: absolute;
             margin: 10px;
             border: 3px solid pink;
             width: 300px;
             top: 400px;
-            display: inline-block;
+            background-color: bisque;
         }
         #task-renderbox{
             left: 20px;
+            top: 0;
         }
         #member-renderbox{
             left: 360px;
+            top: 0;
         }
         #assignment-renderbox{
             left: 710px;
+            top: 0;
         }      
     </style>
  
@@ -58,6 +74,7 @@
 <body>
     <!-- Form for lagring av arbeidsoppgaver -->
     <!--  OBS: "Task is finished"-input gir samme value uansett om boksen er checked eller ikke. Må fiskes! -->
+    <div id="grid-box">
     <div id="enter-task-box" class="entry-field">
         <h1>Arbeidsoppgave</h1>
         <h4>Legg til en arbeidsoppgave</h4>
@@ -113,20 +130,23 @@
             <input type="submit">
         </form>
     </div>
+</div>
    
     <br>
 
     <!-- rendring -->
-    <div id="member-renderbox" class="renderbox">    
-      <div id="teamMemberList"></div>
-    </div>    
-   
-    <div id="task-renderbox" class="renderbox">
-      <div id="task-list"></div>
-    </div>
+    <div id="renderContainer">
+        <div id="member-renderbox" class="renderbox">    
+        <div id="teamMemberList"></div>
+        </div>    
+    
+        <div id="task-renderbox" class="renderbox">
+        <div id="task-list"></div>
+        </div>
 
-    <div id="assignment-renderbox" class="renderbox">
-      <div id="assignment-list"></div>
+        <div id="assignment-renderbox" class="renderbox">
+        <div id="assignment-list"></div>
+        </div>
     </div>
  
  
@@ -175,16 +195,26 @@
         
         const assignmentListEl = document.getElementById("assignment-list");
         assignmentListEl.innerHTML = '';
-        //renderAssignmentList();
+        renderAssignmentList();
     }
 
     //Funksjon for å liste ut alle assignments
-    function renderassignments() {
-      //...
+    function renderAssignmentList() {
+        const assignList = JSON.parse(localStorage.getItem("assignment"));
+        const assignmentListEl = document.getElementById("assignment-list");
+        
+        assignmentListEl.innerHTML = "";
+        for(const assignmentObject of assignList){
+            const assignEl = document.createElement("div");
+            assignEl.innerHTML = `<h3>${assignmentObject.taskToBeAssigned}</h3> <p>${assignmentObject.memberToBeAssigned}</p>`;
+            
+            assignmentListEl.appendChild(assignEl);
+        }
     }
 
 
     //Funksjon for lagring av arbeidsoppgave-objekt
+    var taskChecking = JSON.parse(localStorage.getItem('taskChecking')) || [];
     function addTask(event){
        
         event.preventDefault();
@@ -200,7 +230,7 @@
         var taskObject = {workTask, startDate, deadline, finished};
         taskChecking.push(taskObject);
         localStorage.setItem("taskChecking", JSON.stringify(taskChecking));
-        const taskListEl = document.getElementById("task");
+        const taskListEl = document.getElementById("task-list");
         taskListEl.innerHTML = '';
         renderTaskList();
     }
@@ -278,3 +308,4 @@
 </script>  
 </body>
 </html>
+
