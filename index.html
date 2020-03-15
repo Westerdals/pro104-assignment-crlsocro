@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Arbeidsoversikt</title>
+   
+    <link rel="stylesheet" type="text/css" href="style.css">
+ 
+</head>
+<body>
+    <!-- Form for lagring av arbeidsoppgaver -->
+    <!--  OBS: "Task is finished"-input gir samme value uansett om boksen er checked eller ikke. Må fiskes! -->
+    <div id="enter-task-box" class="entry-field">
+        <h1>Arbeidsoppgave</h1>
+        <h4>Legg til en arbeidsoppgave</h4>
+        <form onsubmit = "addTask(event)">
+            <label type="Arbeidsoppgave">Arbeidsoppgave:</label>
+            <input type="text" name="work-task">
+            <br><br>
+            <label type="Published">Start dato:</label>
+            <input type="date" name="start-date">
+            <br><br>
+            <label type="Deadline">Slutt dato:</label>
+            <input type="date" name="deadline">
+            <br><br>
+            <input type="submit">
+        </form>
+    </div>
+   
+    <!-- Form for lagring av teammedlemmer -->
+    <div id="enter-member-box" class="entry-field">
+        <h1>Teammedlemmer</h1>
+        <h4>Legg til et teammedlem</h4>  
+        <form onsubmit = "addMembers(event)">
+            <label for="Fornavn">Fornavn:</label>
+            <input type="text" name="surname">
+            <br><br>
+            <label for="Etternavn">Etternavn:</label>
+            <input type= "text" name="last-name">
+            <br><br>
+            <input type="submit">
+        </form>
+    </div>
+
+    <div id="enter-assignment-box" class="entry-field">
+        <h1>Tildelinger</h1>
+        <h4>Tildel et teammedlem til en arbeidsoppgave</h4>  
+        <form onsubmit="assignMemberToTask(event)">
+            
+            <label>Arbeidsoppgave:</label>
+            <select id="select-task">
+            </select>
+
+            <br><br>
+
+            <label>Teammedlem:</label>
+            <select id="select-team-member">
+            </select>
+
+            <br><br>
+
+            <input type="submit">
+        </form>
+    </div>
+   
+    <br>
+
+    <!-- rendring -->
+    <div class="renderbox">    
+      <div id="teamMemberList" class="list-div"></div>
+      <div id="task-list" class="list-div"></div>
+      <div id="assignment-list" class="list-div"></div>
+    </div>
+ 
+ 
+<script src="main.js">
+
+
+
+   
+ 
+ 
+</script>  
+</body>
+</html>
